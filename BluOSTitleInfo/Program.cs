@@ -2,17 +2,19 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using BluOSTitleInfo;
 
 class BluOsMonitor
 {
-    // Tauschen Sie diese IP gegen die IP Ihres NAD M10 V2 aus
-    private static readonly string DeviceIp = "192.168.0.7";
     private static readonly HttpClient client = new HttpClient();
 
     static async Task Main(string[] args)
     {
-        string currentEtag = "";
         Console.WriteLine("BluOS Liedwechsel-Monitor gestartet...");
+
+        string DeviceIp = ConfigManager.GetAppSettingsValue("DeviceIp");
+
+        string currentEtag = "";
 
         string title = string.Empty;
 
