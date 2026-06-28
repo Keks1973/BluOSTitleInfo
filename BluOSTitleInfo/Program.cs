@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using BluOSTitleInfo;
+using BluOSTitleInfo.Classes;
 
 class BluOsMonitor
 {
@@ -12,7 +13,14 @@ class BluOsMonitor
     {
         Console.WriteLine("BluOS Liedwechsel-Monitor gestartet...");
 
-        string DeviceIp = ConfigManager.GetAppSettingsValue("DeviceIp");
+        //IP-Adresse besorgen
+        string deviceIp = NetworkManager.GetDeviceIp(args);
+
+        if (string.IsNullOrEmpty(deviceIp))
+        {
+            // Wenn keine IP-Adresse gefunden wurde, Programm beenden
+            return;
+        }
 
         string currentEtag = "";
 
@@ -23,7 +31,7 @@ class BluOsMonitor
             try
             {
                 // URL für das Long Polling zusammenbauen (Timeout: 30 Sekunden)
-                string url = $"http://{DeviceIp}:11000/Status?timeout=30";
+                string url = $"http://{deviceIp}:11000/Status?timeout=30";
                 if (!string.IsNullOrEmpty(currentEtag))
                 {
                     url += $"&etag={currentEtag}";
@@ -70,7 +78,7 @@ class BluOsMonitor
             catch (HttpRequestException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Fehler: NAD M10 V2 nicht erreichbar. Versuche es in 5 Sekunden erneut...");
+                Console.WriteLine($"Fehler: {deviceIp} nicht erreichbar. Versuche es in 5 Sekunden erneut...");
                 Console.ResetColor();
                 await Task.Delay(5000); // Kurz warten vor dem nächsten Versuch
             }

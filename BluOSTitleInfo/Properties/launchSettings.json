@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BluOSTitleInfo": {
+      "commandName": "Project",
+      "commandLineArgs": "192.168.0.7"
+    }
+  }
+}

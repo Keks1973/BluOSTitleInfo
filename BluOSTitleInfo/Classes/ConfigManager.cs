@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BluOSTitleInfo
+namespace BluOSTitleInfo.Classes
 {
     internal static class ConfigManager
     {
@@ -13,7 +13,16 @@ namespace BluOSTitleInfo
         /// <returns></returns>
         internal static string GetAppSettingsValue(string key)
         {
-            return System.Configuration.ConfigurationManager.AppSettings[key];
+            try
+            {
+                return System.Configuration.ConfigurationManager.AppSettings[key];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Fehler beim Lesen der Konfiguration: {ex.Message}");
+
+                return null;
+            }
         }
 
     }
